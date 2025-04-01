@@ -1,0 +1,14 @@
+{
+  "total": 3.2800000000000002,
+  "lemonades": [
+    {
+      "lemonJuice": 3,
+      "water": 3,
+      "sugar": 3,
+      "iceCubes": 20,
+      "price": 3.2800000000000002
+    }
+  ],
+  "customer": { "name": "phill", "phoneNumber": 12345 },
+  "lemonadeStand": { "name": "Cooksys LemonadeStand" }
+}
