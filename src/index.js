@@ -9,13 +9,6 @@ import {
 const vorpal = Vorpal();
 
 vorpal
-  .command("hello <name> [number]", "Prints hello to the console")
-  .action(function (args, callback) {
-    this.log(`Hello ${args.name} should I call you at ${args.number}`);
-    callback();
-  });
-
-vorpal
   .command(
     "createOrder <name> <phoneNumber>",
     "Create an order and saves it as a JSON file"
@@ -106,7 +99,12 @@ vorpal
     const orders = readAllFiles(lemonadeStand);
     this.log(`There are ${orders.length} orders at ${lemonadeStand}`);
     for (let order of orders) {
-      this.log();
+      this.log(`Order ${orders.indexOf(order) + 1}:`);
+      this.log(`Total Price: $${order.total.toFixed(2)}`);
+      this.log(`Lemonades: `);
+      this.log(order.lemonades);
+      this.log(`Customer: `);
+      this.log(order.customer);
     }
   });
 
