@@ -7,10 +7,6 @@ function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 var vorpal = (0, _vorpal["default"])();
-vorpal.command("hello <name> [number]", "Prints hello to the console").action(function (args, callback) {
-  this.log("Hello ".concat(args.name, " should I call you at ").concat(args.number));
-  callback();
-});
 vorpal.command("createOrder <name> <phoneNumber>", "Create an order and saves it as a JSON file").action(function (args, callback) {
   var _this = this;
   var order = {
@@ -99,10 +95,12 @@ vorpal.command("getOrders <lemonadeStand>", "Get all orders for the given lemona
   try {
     for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var order = _step2.value;
-      this.log("Order ".concat(orders.indexOf(order) + 1));
-      this.log("Total Price: ".concat(order.total));
-      this.log("Lemonades: ".concat(order.lemonades));
-      this.log("Customer: ".concat(order.customer));
+      this.log("Order ".concat(orders.indexOf(order) + 1, ":"));
+      this.log("Total Price: $".concat(order.total.toFixed(2)));
+      this.log("Lemonades: ");
+      this.log(order.lemonades);
+      this.log("Customer: ");
+      this.log(order.customer);
     }
   } catch (err) {
     _iterator2.e(err);

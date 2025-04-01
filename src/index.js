@@ -1,8 +1,10 @@
 import Vorpal from "vorpal";
 import {
-  calculateLemonadePrice,
-  calculateOrderTotal,
+  addLemonadeToOrder,
+  buildQuestionArray,
+  createLemonade,
   readAllFiles,
+  updateOrderTotal,
   writeFileSync,
 } from "./lib";
 
@@ -14,18 +16,6 @@ vorpal
     "Create an order and saves it as a JSON file"
   )
   .action(function (args, callback) {
-    const order = {
-      total: 0,
-      lemonades: [],
-      customer: {
-        name: args.name,
-        phoneNumber: args.phoneNumber,
-      },
-      lemonadeStand: {
-        name: "Cooksys LemonadeStand",
-      },
-    };
-
     // Prompt user for how many lemonades they want
     this.prompt(
       {
@@ -35,50 +25,27 @@ vorpal
         message: "How many lemonades would you like to order? ",
       },
       ({ numLemonades }) => {
-        const questions = [];
-        for (let i = 1; i <= Number.parseInt(numLemonades); i++) {
-          questions.push({
-            type: "number",
-            name: "lemonJuice" + i,
-            default: 1,
-            message: `How many cups of lemon juice do you want in lemonade ${i}? `,
-          });
-          questions.push({
-            type: "number",
-            name: "water" + i,
-            default: 1,
-            message: `How many cups of water do you want in lemonade ${i}? `,
-          });
-          questions.push({
-            type: "number",
-            name: "sugar" + i,
-            default: 1,
-            message: `How many cups of sugar do you want in lemonade ${i}? `,
-          });
-          questions.push({
-            type: "number",
-            name: "iceCubes" + i,
-            default: 1,
-            message: `How many ice cubes do you want in lemonade ${i}? `,
-          });
-        }
+        const questions = [...Array(Number(numLemonades))].flatMap(
+          buildQuestionArray
+        );
+
         this.prompt(questions, (response) => {
           // create a lemonade object for each lemonade in the order
-          for (let i = 1; i <= Number.parseInt(numLemonades); i++) {
-            order.lemonades.push({
-              lemonJuice: Number(response["lemonJuice" + i]),
-              water: Number(response["water" + i]),
-              sugar: Number(response["sugar" + i]),
-              iceCubes: Number(response["iceCubes" + i]),
-            });
-          }
-
-          // calculate each lemonade price
-          for (let lemonade of order.lemonades) {
-            lemonade.price = calculateLemonadePrice(lemonade);
-          }
-
-          order.total = calculateOrderTotal(order);
+          const order = updateOrderTotal(
+            [...Array(Number(numLemonades))]
+              .map(createLemonade(response))
+              .reduce(addLemonadeToOrder, {
+                total: 0,
+                lemonades: [],
+                customer: {
+                  name: args.name,
+                  phoneNumber: args.phoneNumber,
+                },
+                lemonadeStand: {
+                  name: "Cooksys LemonadeStand",
+                },
+              })
+          );
 
           writeFileSync(
             order.lemonadeStand.name + "/" + order.customer.name + ".json",
